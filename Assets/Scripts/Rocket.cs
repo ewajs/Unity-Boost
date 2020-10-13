@@ -15,6 +15,13 @@ public class Rocket : MonoBehaviour
     AudioClip dyingSound;
 
     [SerializeField]
+    ParticleSystem mainEngineParticle;
+    [SerializeField]
+    ParticleSystem transcendingParticle;
+    [SerializeField]
+    ParticleSystem dyingParticle;
+
+    [SerializeField]
     float rcsThrust = 50f;
 
     [SerializeField]
@@ -52,12 +59,14 @@ public class Rocket : MonoBehaviour
                 state = State.Transcending;
                 audioSource.Stop();
                 audioSource.PlayOneShot(transcendingSound);
+                transcendingParticle.Play();
                 Invoke("LoadNextScene", 1f); // parameterize
                 break;
             default:
                 state = State.Dying;
                 audioSource.Stop();
                 audioSource.PlayOneShot(dyingSound);
+                dyingParticle.Play();
                 Invoke("LoadStartScene", 3f);
                 break;
         }
@@ -83,10 +92,15 @@ public class Rocket : MonoBehaviour
             {
                 audioSource.PlayOneShot(mainEngineSound);
             }
+            if (!mainEngineParticle.isPlaying)
+            {
+                mainEngineParticle.Play();
+            }
         }
         else
         {
             audioSource.Stop();
+            mainEngineParticle.Stop();
         }
     }
 
