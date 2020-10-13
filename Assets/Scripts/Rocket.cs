@@ -27,6 +27,9 @@ public class Rocket : MonoBehaviour
     [SerializeField]
     float mainThrust = 1000f;
 
+    [SerializeField]
+    float levelLoadDelay = 2f;
+
     enum State { Alive, Dying, Transcending }
     State state = State.Alive;
     // Start is called before the first frame update
@@ -60,14 +63,14 @@ public class Rocket : MonoBehaviour
                 audioSource.Stop();
                 audioSource.PlayOneShot(transcendingSound);
                 transcendingParticle.Play();
-                Invoke("LoadNextScene", 1f); // parameterize
+                Invoke("LoadNextScene", levelLoadDelay); // parameterize
                 break;
             default:
                 state = State.Dying;
                 audioSource.Stop();
                 audioSource.PlayOneShot(dyingSound);
                 dyingParticle.Play();
-                Invoke("LoadStartScene", 3f);
+                Invoke("LoadStartScene", levelLoadDelay);
                 break;
         }
     }
