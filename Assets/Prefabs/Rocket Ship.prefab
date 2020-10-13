@@ -255,6 +255,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02cb44f22fec249e0b6f3e1661d11015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainEngineSound: {fileID: 8300000, guid: 52992108be553460195e5a6ed01203ae, type: 3}
+  transcendingSound: {fileID: 8300000, guid: 6b99afe88038e427c8101ceb35bcf551, type: 3}
+  dyingSound: {fileID: 8300000, guid: ac7c81210744c480b866ec3635e5b9db, type: 3}
   rcsThrust: 50
   mainThrust: 1000
 --- !u!82 &8788728435583739178

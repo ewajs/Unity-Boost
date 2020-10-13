@@ -1,11 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour
 {
     Rigidbody rigidBody;
     AudioSource audioSource;
+    [SerializeField]
+    AudioClip mainEngineSound;
+    [SerializeField]
+    AudioClip transcendingSound;
+    [SerializeField]
+    AudioClip dyingSound;
 
     [SerializeField]
     float rcsThrust = 50f;
@@ -13,6 +20,8 @@ public class Rocket : MonoBehaviour
     [SerializeField]
     float mainThrust = 1000f;
 
+    enum State { Alive, Dying, Transcending }
+    State state = State.Alive;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,21 +32,45 @@ public class Rocket : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Thrust();
-        Rotate();
+        // TODO: Stop sound
+        if (state == State.Alive)
+        {
+            Thrust();
+            Rotate();
+        }
     }
 
     void OnCollisionEnter(Collision collision)
     {
+        if (state != State.Alive) { return; }
         switch (collision.gameObject.tag)
         {
             case "Friendly":
                 print("OK");
                 break;
+            case "Finish":
+                state = State.Transcending;
+                audioSource.Stop();
+                audioSource.PlayOneShot(transcendingSound);
+                Invoke("LoadNextScene", 1f); // parameterize
+                break;
             default:
-                print("Dead!");
+                state = State.Dying;
+                audioSource.Stop();
+                audioSource.PlayOneShot(dyingSound);
+                Invoke("LoadStartScene", 3f);
                 break;
         }
+    }
+
+    private void LoadStartScene()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    private void LoadNextScene()
+    {
+        SceneManager.LoadScene(1);
     }
 
     private void Thrust()
@@ -48,7 +81,7 @@ public class Rocket : MonoBehaviour
             rigidBody.AddRelativeForce(Vector3.up * thrustSpeed);
             if (!audioSource.isPlaying)
             {
-                audioSource.Play();
+                audioSource.PlayOneShot(mainEngineSound);
             }
         }
         else
